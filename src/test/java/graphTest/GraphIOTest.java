@@ -25,7 +25,7 @@ public class GraphIOTest {
         Graph original = GraphIO.readFromFile("src/test/resources/graph07.gka");
 
         Path tempFile = Files.createTempFile("graph-test-", ".gka");
-        GraphIO.saveToFile(original, tempFile.toString(), true);
+        GraphIO.saveToFile(original, tempFile.toString());
 
         Graph reloaded = GraphIO.readFromFile(tempFile.toString());
 

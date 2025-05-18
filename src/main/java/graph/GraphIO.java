@@ -25,42 +25,48 @@ public class GraphIO {
                 if (line.contains("->") || line.contains("--")) {
                     boolean directed = line.contains("->");
 
-                    // Split nodes
+                    // Aufteilung und Parsing der Knoten
                     String[] parts = directed ? line.split("->") : line.split("--");
 
                     String node1 = parts[0].strip();
-                    String rest = parts[1].strip().replace(";", "");
+                    String rest = parts[1].strip().replace(";", "");  //entferne Trennzeichen
 
-                    // Extract node2 (before ':' or '(' if any)
+                    // node2 extrahieren  (vor ':' oder '(' wenn vorhanden)  Bsp-"Hamburg : 127" => Hamburg
                     String node2 = rest.split("[:\\(]")[0].strip();
 
-                    // Parse weight if present, default 1.0
+                    // Parse Gewichtung wenn vorhanden , default ist 1.0  Bsp-"B (e1) : 2" → split(":") → ["B (e1) ", " 2"]
                     double weight = rest.contains(":") ? Double.parseDouble(rest.split(":")[1].strip()) : 1.0;
 
-                    // Add nodes if not exist
+                    // Knoten zum Graph hinzufügen wenn nicht vorhanden
                     if (graph.getNode(node1) == null) graph.addNode(node1);
                     if (graph.getNode(node2) == null) graph.addNode(node2);
 
+                    //KantenId aus geparsten Wege
                     String edgeId;
+                    //Gerichtet oder ungerichtet
                     if (directed) {
+                        //
                         edgeId = node1 + "->" + node2;
-                        // Add directed edge
+                        // Gerichtete Kante mit entsprechendem Gewicht hinzufügen
                         if (graph.getEdge(edgeId) == null) {
                             graph.addEdge(edgeId, node1, node2, true).setAttribute("weight", weight);
                         }
                     } else {
-                        // Undirected edges: normalize node order to avoid duplicate edges with reversed nodes
+                        //Sortierung der Knotennamen zur Vermeidung von doppelten Kanten  Bsp. A -- B gleich wie B -- A
+                        // Alphabetische Ordnung
                         String first = node1.compareTo(node2) < 0 ? node1 : node2;
                         String second = node1.compareTo(node2) < 0 ? node2 : node1;
+                        //Eindeutige ID des Kantes
                         edgeId = first + "--" + second;
 
+                        // Ungerichtete Kanten mit entsprechendem Gewicht hinzufügen
                         if (graph.getEdge(edgeId) == null) {
                             graph.addEdge(edgeId, first, second, false).setAttribute("weight", weight);
                         }
                     }
-
+                // Isolierte Knoten
+                    // Falls  eine Zeile nur ein einzelner Knoten ist Bsp. X;
                 } else if (line.endsWith(";")) {
-                    // isolated node line
                     String node = line.replace(";", "").strip();
                     if (graph.getNode(node) == null) graph.addNode(node);
                 }
@@ -72,29 +78,37 @@ public class GraphIO {
         return graph;
     }
 
-    public static void saveToFile(Graph graph, String path, boolean directed) throws IOException {
+    public static void saveToFile(Graph graph, String path) throws IOException {
+        //open file to write
         try (BufferedWriter writer = Files.newBufferedWriter(Path.of(path))) {
-            writer.write(directed ? "gerichtet\n" : "ungerichtet\n");
+            boolean isDirected = false;
 
+            // Prüfe, ob überhaupt eine Kante existiert, und bestimme ob es sich um gerichtete oder ungerichtete Graphen handelt
+            if (graph.getEdgeCount() > 0) {
+                Edge firstEdge = graph.getEdge(0);
+                isDirected = firstEdge.isDirected();
+            }
+            //Iteration durch alle Kanten und entsprechende Extraktion der Start-, Endknoten und ggf. Gewichtung
             for (Edge edge : graph.edges().toList()) {
                 String src = edge.getSourceNode().getId();
                 String tgt = edge.getTargetNode().getId();
                 Object weight = edge.getAttribute("weight");
 
-                String line = src + (directed ? " -> " : " -- ") + tgt;
+                String line = src + (isDirected ? " -> " : " -- ") + tgt;
 
                 if (weight != null) {
                     line += ": " + weight;
                 }
-
+                //Schreiben in der Datei
                 writer.write(line + ";\n");
             }
-
+             //Iteration und schreiben der isolierten Knoten in der Datei
             for (Node node : graph.nodes().toList()) {
+                //Wenn getDegree() == 0 , dann hat der Knoten keine Kanten
                 if (node.getDegree() == 0) {
                     writer.write(node.getId() + ";\n");
                 }
             }
         }
-    }
-}
+    }}
+
