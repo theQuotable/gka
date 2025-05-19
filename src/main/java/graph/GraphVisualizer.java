@@ -5,6 +5,7 @@ import org.graphstream.graph.implementations.*;
 
 public class GraphVisualizer {
     public static void main(String[] args) throws Exception {
+        //
         System.setProperty("org.graphstream.ui", "swing");
 
         // Use MultiGraph here (actually created inside readFromFile)
@@ -22,7 +23,9 @@ public class GraphVisualizer {
 //        Graph graph = GraphIO.readFromFile("/home/uncleruckus/Documents/uni/2025SS/gka/Praktikum/gkaA1/src/main/resources/graph12.gka");
 //        Graph graph = GraphIO.readFromFile("/home/uncleruckus/Documents/uni/2025SS/gka/Praktikum/gkaA1/src/main/resources/graph13.gka");
 
+        //Knoten sind rot, Kanten sind grau
         graph.setAttribute("ui.stylesheet", "node { fill-color: red; } edge { fill-color: gray; }");
+        //ID des Knoten als Label
         for (Node node : graph) {
             node.setAttribute("ui.label", node.getId());
         }

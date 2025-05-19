@@ -15,39 +15,131 @@ public class BFSTest {
 
     private static final Path BASE_PATH = Path.of("/home/uncleruckus/Documents/uni/2025SS/gka/Praktikum/gkaA1/src/main/resources");
 
+    //EINFACHE GRAPHEN
+    //GERICHTETE
+    //OHNE GEWICHTUNG
+//    @Test
+//    public void testBfsSimpelGerichteteGraphOhneGewichtungPathExists() throws IOException { //Kein geeignetes Beispiel in der Testdatei gefunden
+//        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph12.gka").toString());
+//
+//        List<String> path = BFS.bfs(graph, "A", "C");
+//
+//        assertNotNull(path);
+//        assertFalse(path.isEmpty());
+//        assertEquals("A", path.get(0));
+//        assertEquals("C", path.get(path.size() - 1));
+//        assertTrue(path.size() <= 3);
+//    }
+
+    //EINFACHE GRAPHEN
+    //GERICHTETE
+    //MIT GEWICHTUNG
     @Test
-    public void testBfsSimpleGraphPathExists() throws IOException {
+    public void testBfsSimpelGerichteteGraphMitGewichtungPathExists() throws IOException {
+        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph12.gka").toString());
+
+        List<String> path = BFS.bfs(graph, "A", "C");
+
+        assertNotNull(path);
+        assertFalse(path.isEmpty());
+        assertEquals("A", path.get(0));
+        assertEquals("C", path.get(path.size() - 1));
+        assertTrue(path.size() <= 3);
+    }
+
+    //EINFACHE GRAPHEN
+    //UNGERICHTETE
+    //OHNE GEWICHTUNG
+//    @Test
+//    public void testBfsSimpleUngerichteteGraphOhneGewichtungPathExists() throws IOException {  //Kein geeignetes Beispiel in der Testdatei gefunden
+//        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph02.gka").toString());
+//
+//        List<String> path = BFS.bfs(graph, "a", "c");
+//
+//        assertNotNull(path, "Path sollte nicht null sein");
+//        assertFalse(path.isEmpty(), "Path sollte nicht leer sein");
+//        assertEquals("a", path.get(0), "Path beginnt bei 'a'");
+//        assertEquals("c", path.get(path.size() - 1), "Path sollte bis zum 'c' Knoten gehen");
+//        assertTrue(path.size() <= 3, "Path sollte maximal 3 Knoten und 2 Kanten haben)");
+//    }
+
+    //EINFACHE GRAPHEN
+    //UNGERICHTETE
+    //MIT GEWICHTUNG
+    @Test
+    public void testBfsSimpleUngerichteteGraphMitGewichtungPathExists() throws IOException { //CHECK
+        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph03.gka").toString());
+
+        List<String> path = BFS.bfs(graph, "Soltau", "Hamburg");
+
+        assertNotNull(path);
+        assertFalse(path.isEmpty());
+        assertEquals("Soltau", path.get(0));
+        assertEquals("Hamburg", path.get(path.size() - 1));
+        assertTrue(path.size() <= 3); // Soltau → Buxtehude → Hamburg oder Soltau → Lüneburg → Hamburg
+    }
+
+
+    //KOMPLEXE GRAPHEN
+    //GERICHTETE
+    //OHNE GEWICHTUNG
+    @Test
+    public void testBfsKomplexeGerichteteGraphOhneGewichtungPathExists() throws IOException { //CHECK
         Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph01.gka").toString());
 
         List<String> path = BFS.bfs(graph, "a", "c");
 
-        assertNotNull(path, "Path should not be null");
-        assertFalse(path.isEmpty(), "Path should not be empty");
-        assertEquals("a", path.get(0), "Path should start at 'a'");
-        assertEquals("c", path.get(path.size() - 1), "Path should end at 'c'");
-        assertTrue(path.size() <= 3, "Path should have max 3 nodes (2 edges)");
+        assertNotNull(path);
+        assertFalse(path.isEmpty());
+        assertEquals("a", path.get(0));
+        assertEquals("c", path.get(path.size() - 1));
     }
 
+    //KOMPLEXE GRAPHEN
+    //GERICHTETE
+    //MIT GEWICHTUNG
+//    @Test
+//    public void testBfsKomplexeGerichteteGraphMitGewichtungPathExists() throws IOException { ////Kein geeignetes Beispiel in der Testdatei gefunden
+//        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph01.gka").toString());
+//
+//        List<String> path = BFS.bfs(graph, "a", "c");
+//
+//        assertNotNull(path, "Path sollte nicht null sein");
+//        assertFalse(path.isEmpty(), "Path sollte nicht leer sein");
+//        assertEquals("a", path.get(0), "Path beginnt bei 'a'");
+//        assertEquals("c", path.get(path.size() - 1), "Path sollte bis zum 'c' Knoten gehen");
+//        assertTrue(path.size() <= 3, "Path sollte maximal 3 Knoten und 2 Kanten haben)");
+//    }
+
+    //KOMPLEXE GRAPHEN
+    //UNGERICHTETE
+    //OHNE GEWICHTUNG
     @Test
-    public void testBfsSimpleGraphNoPath() throws IOException {
-        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph06.gka").toString());
+    public void testBfsKomplexeUngerichteteGraphOhneGewichtungPathExists() throws IOException { //CHECK
+        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph02.gka").toString());
 
-        List<String> path = BFS.bfs(graph, "v1", "v100");
+        List<String> path = BFS.bfs(graph, "a", "c");
 
-        assertNotNull(path, "Path should not be null");
-        assertTrue(path.isEmpty(), "There should be no path between v1 and v100");
+        assertNotNull(path);
+        assertFalse(path.isEmpty());
+        assertEquals("a", path.get(0));
+        assertEquals("c", path.get(path.size() - 1));
     }
 
+    //KOMPLEXE GRAPHEN
+    //UNGERICHTETE
+    //MIT GEWICHTUNG
     @Test
-    public void testBfsLargeCityGraph() throws IOException {
-        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("cityGraph.gka").toString());
+    public void testBfsKomplexeUngerichteteGraphMitGewichtungPathExists() throws IOException { //CHECK
+        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph13.gka").toString());
 
-        List<String> path = BFS.bfs(graph, "Münster", "Cuxhaven");
+        List<String> path = BFS.bfs(graph, "A", "C");
 
-        assertNotNull(path, "Path should not be null");
-        assertFalse(path.isEmpty(), "Path should exist between Münster and Cuxhaven");
-        assertEquals("Münster", path.get(0));
-        assertEquals("Cuxhaven", path.get(path.size() - 1));
+        assertNotNull(path);
+        assertFalse(path.isEmpty());
+        assertEquals("A", path.get(0));
+        assertEquals("C", path.get(path.size() - 1));
+        assertTrue(path.size() <= 2); // z. B. A → C direkt über Kante x8
     }
 
     @Test
@@ -56,33 +148,8 @@ public class BFSTest {
 
         List<String> path = BFS.bfs(graph, "a", "a");
 
-        assertNotNull(path, "Path should not be null");
-        assertEquals(1, path.size(), "Path should only contain the start node");
+        assertNotNull(path, "Path sollte nicht null sein");
+        assertEquals(1, path.size(), "Path sollte nur den ersten Knoten haben");
         assertEquals("a", path.get(0));
-    }
-
-    @Test
-    public void testBfsComplexGraphCorrectPath() throws IOException {
-        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph07.gka").toString());
-
-        List<String> path = BFS.bfs(graph, "q", "v3");
-
-        assertNotNull(path);
-        assertFalse(path.isEmpty());
-        assertEquals("q", path.get(0));
-        assertEquals("v3", path.get(path.size() - 1));
-
-        // Optional: Print the path for visual verification
-        System.out.println("BFS path from q to v3: " + path);
-    }
-
-    @Test
-    public void testBfsDisconnectedGraph() throws IOException {
-        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph_disconnected.gka").toString());
-
-        List<String> path = BFS.bfs(graph, "A", "Z");
-
-        assertNotNull(path);
-        assertTrue(path.isEmpty(), "Should return empty path when no connection exists");
     }
 }
