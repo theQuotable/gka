@@ -35,8 +35,13 @@ public class GraphIO {
                     String node2 = rest.split("[:\\(]")[0].strip();
 
                     // Parse Gewichtung wenn vorhanden , default ist 1.0  Bsp-"B (e1) : 2" → split(":") → ["B (e1) ", " 2"]
-                    double weight = rest.contains(":") ? Double.parseDouble(rest.split(":")[1].strip()) : 1.0;
-
+                    double weight = 1.0;
+                    if (rest.contains(":")) {
+                        String weightPart = rest.split(":")[1].strip();
+                        if (!weightPart.isEmpty()) {
+                            weight = Double.parseDouble(weightPart);
+                        }
+                    }
                     // Knoten zum Graph hinzufügen wenn nicht vorhanden
                     if (graph.getNode(node1) == null) graph.addNode(node1);
                     if (graph.getNode(node2) == null) graph.addNode(node2);

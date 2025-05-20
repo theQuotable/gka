@@ -152,4 +152,14 @@ public class BFSTest {
         assertEquals(1, path.size(), "Path sollte nur den ersten Knoten haben");
         assertEquals("a", path.get(0));
     }
+
+    @Test
+    public void testPathNotExists() throws IOException {
+        Graph graph = GraphIO.readFromFile(BASE_PATH.resolve("graph06.gka").toString());
+
+        List<String> path = BFS.bfs(graph, "1", "12");
+
+        assertNotNull(path);
+        assertTrue(path.isEmpty());
+    }
 }
